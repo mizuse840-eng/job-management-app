@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>就活管理ダッシュボード</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+
+<body>
+    <h1>インターン応募管理</h1>
+
+    <div class="search-container">
+        <form action="/" method="get">
+            <input type="text" name="keyword" placeholder="企業名で検索...">
+            <button type="submit">検索</button>
+            <a href="/">リセット</a>
+        </form>
+    </div>
+
+    <form action="/add" method="post">
+        <input type="date" name="deadline" required>
+        <input type="text" name="companyName" placeholder="企業名" required>
+        <select name="status" required>
+            <option value="" disabled selected>状況を選択</option>
+            <option value="応募準備中">応募準備中</option>
+            <option value="ES提出済み">ES提出済み</option>
+            <option value="面接待ち">面接待ち</option>
+            <option value="結果待ち">結果待ち</option>
+            <option value="お見送り">お見送り</option>
+        </select>
+        <button type="submit">登録する</button>
+    </form>
+
+    <hr>
+
+    <ul>
+        <li th:each="job : ${jobs}">
+            <span th:text="${job.deadline}"></span> -
+            <strong th:text="${job.companyName}"></strong> -
+            <span th:text="${job.status}"
+                th:classappend="${job.status == '面接待ち' ? 'status-green' : (job.status == 'ES提出済み' ? 'status-blue' : 'status-default')}">
+            </span>
+
+            <form action="/update" method="post" style="display:inline;">
+                <input type="hidden" name="id" th:value="${job.id}">
+                <form action="/update" method="post" style="display:inline;">
+                    <input type="hidden" name="id" th:value="${job.id}">
+
+                    <select name="status" required>
+                        <option value="応募準備中">応募準備中</option>
+                        <option value="ES提出済み">ES提出済み</option>
+                        <option value="面接待ち">面接待ち</option>
+                        <option value="結果待ち">結果待ち</option>
+                        <option value="お見送り">お見送り</option>
+                    </select>
+
+                    <button type="submit">更新</button>
+                </form>
+                <button type="submit">更新</button>
+            </form>
+
+            <form action="/delete" method="post" style="display:inline;">
+                <input type="hidden" name="id" th:value="${job.id}">
+                <button type="submit" onclick="return confirm('消しますか？')">削除</button>
+            </form>
+        </li>
+    </ul>
+</body>
+
+</html>
