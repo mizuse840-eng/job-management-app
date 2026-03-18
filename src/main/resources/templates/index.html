@@ -44,19 +44,17 @@
 
             <form action="/update" method="post" style="display:inline;">
                 <input type="hidden" name="id" th:value="${job.id}">
-                <form action="/update" method="post" style="display:inline;">
-                    <input type="hidden" name="id" th:value="${job.id}">
 
-                    <select name="status" required>
-                        <option value="応募準備中">応募準備中</option>
-                        <option value="ES提出済み">ES提出済み</option>
-                        <option value="面接待ち">面接待ち</option>
-                        <option value="結果待ち">結果待ち</option>
-                        <option value="お見送り">お見送り</option>
-                    </select>
 
-                    <button type="submit">更新</button>
-                </form>
+                <select name="status" required>
+                    <option value="応募準備中">応募準備中</option>
+                    <option value="ES提出済み">ES提出済み</option>
+                    <option value="面接待ち">面接待ち</option>
+                    <option value="結果待ち">結果待ち</option>
+                    <option value="お見送り">お見送り</option>
+                </select>
+
+
                 <button type="submit">更新</button>
             </form>
 
