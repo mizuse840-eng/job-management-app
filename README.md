@@ -6,7 +6,7 @@
 [アプリを開く（Render）]https://job-management-app-womb.onrender.com
 ※無料プランを使用しているため、最初の読み込みに 50秒〜1分ほど かかる場合があります。一度起動すればスムーズに動作します。
 
-![デモ動画]<img src="images/demo.gif" alt="デモ動画" width="600">
+![デモ動画]<img src="images/demo.gif"  width="600">
 
 就職活動・インターンシップ選考管理アプリ
 概要
