@@ -1,0 +1,47 @@
+package com.example.job_management;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import java.time.LocalDate;
+import java.util.List;
+
+// @Serviceをつけることで、Springに「これが作業員です」と認識させる
+@Service
+public class JobService {
+
+    @Autowired
+    private JobRepository jobRepository;
+
+    // 検索と一覧取得の作業
+    public List<Job> getJobs(String keyword) {
+        if (keyword != null && !keyword.isEmpty()) {
+            return jobRepository.findByCompanyNameContainingOrderByDeadlineAsc(keyword);
+        } else {
+            return jobRepository.findAllByOrderByDeadlineAsc();
+        }
+    }
+
+    // データ追加の作業
+    public void addJob(String companyName, String status, LocalDate deadline) {
+        if (companyName == null || companyName.trim().isEmpty()) {
+            return;
+        }
+        Job job = new Job();
+        job.setCompanyName(companyName);
+        job.setStatus(status);
+        job.setDeadline(deadline);
+        jobRepository.save(job);
+    }
+
+    // 削除の作業
+    public void deleteJob(Long id) {
+        jobRepository.deleteById(id);
+    }
+
+    // 更新の作業
+    public void updateJob(Long id, String status) {
+        Job job = jobRepository.findById(id).orElseThrow();
+        job.setStatus(status);
+        jobRepository.save(job);
+    }
+}
