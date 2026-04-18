@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 @Controller
-public class HelloController {
+public class JobController {
 
     @Autowired
     private JobRepository jobRepository;
