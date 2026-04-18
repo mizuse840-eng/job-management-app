@@ -5,65 +5,68 @@
     <meta charset="UTF-8">
     <title>就活管理ダッシュボード</title>
     <link rel="stylesheet" th:href="@{/style.css}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body>
-    <h1>インターン応募管理</h1>
+    <div class="container mt-4"> <h1>インターン応募管理</h1>
 
-    <div class="search-container">
-        <form action="/" method="get">
-            <input type="text" name="keyword" placeholder="企業名で検索...">
-            <button type="submit">検索</button>
-            <a href="/">リセット</a>
+        <div class="search-container mb-4">
+            <form action="/" method="get" class="d-flex gap-2 align-items-center">
+                <input type="text" name="keyword" class="form-control w-auto" placeholder="企業名で検索...">
+                <button type="submit" class="btn btn-primary">検索</button>
+                <a href="/" class="btn btn-outline-secondary">リセット</a>
+            </form>
+        </div>
+
+        <form action="/add" method="post" class="d-flex gap-2 mb-4 align-items-center">
+            <input type="date" name="deadline" class="form-control w-auto" required>
+            <input type="text" name="companyName" class="form-control w-auto" placeholder="企業名" required>
+            <select name="status" class="form-select w-auto" required>
+                <option value="" disabled selected>状況を選択</option>
+                <option value="応募準備中">応募準備中</option>
+                <option value="ES提出済み">ES提出済み</option>
+                <option value="面接待ち">面接待ち</option>
+                <option value="結果待ち">結果待ち</option>
+                <option value="お見送り">お見送り</option>
+            </select>
+            <button type="submit" class="btn btn-success">登録する</button>
         </form>
+
+        <hr>
+
+        <ul class="list-group"> <li th:each="job : ${jobs}" class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <span th:text="${job.deadline}"></span> -
+                    <strong th:text="${job.companyName}"></strong>
+                    
+                    <span class="badge ms-2"
+                          th:text="${job.status}"
+                          th:classappend="${job.status == '面接待ち' ? 'text-bg-success' : (job.status == 'ES提出済み' ? 'text-bg-primary' : (job.status == 'お見送り' ? 'text-bg-dark' : 'text-bg-secondary'))}">
+                    </span>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <form action="/update" method="post" style="display:inline;">
+                        <input type="hidden" name="id" th:value="${job.id}">
+                        <select name="status" class="form-select form-select-sm d-inline w-auto" required>
+                            <option value="応募準備中">応募準備中</option>
+                            <option value="ES提出済み">ES提出済み</option>
+                            <option value="面接待ち">面接待ち</option>
+                            <option value="結果待ち">結果待ち</option>
+                            <option value="お見送り">お見送り</option>
+                        </select>
+                        <button type="submit" class="btn btn-warning btn-sm">更新</button>
+                    </form>
+
+                    <form action="/delete" method="post" style="display:inline;">
+                        <input type="hidden" name="id" th:value="${job.id}">
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('消しますか？')">削除</button>
+                    </form>
+                </div>
+            </li>
+        </ul>
     </div>
-
-    <form action="/add" method="post">
-        <input type="date" name="deadline" required>
-        <input type="text" name="companyName" placeholder="企業名" required>
-        <select name="status" required>
-            <option value="" disabled selected>状況を選択</option>
-            <option value="応募準備中">応募準備中</option>
-            <option value="ES提出済み">ES提出済み</option>
-            <option value="面接待ち">面接待ち</option>
-            <option value="結果待ち">結果待ち</option>
-            <option value="お見送り">お見送り</option>
-        </select>
-        <button type="submit">登録する</button>
-    </form>
-
-    <hr>
-
-    <ul>
-        <li th:each="job : ${jobs}">
-            <span th:text="${job.deadline}"></span> -
-            <strong th:text="${job.companyName}"></strong> -
-            <span th:text="${job.status}"
-                th:classappend="${job.status == '面接待ち' ? 'status-green' : (job.status == 'ES提出済み' ? 'status-blue' : 'status-default')}">
-            </span>
-
-            <form action="/update" method="post" style="display:inline;">
-                <input type="hidden" name="id" th:value="${job.id}">
-
-
-                <select name="status" required>
-                    <option value="応募準備中">応募準備中</option>
-                    <option value="ES提出済み">ES提出済み</option>
-                    <option value="面接待ち">面接待ち</option>
-                    <option value="結果待ち">結果待ち</option>
-                    <option value="お見送り">お見送り</option>
-                </select>
-
-
-                <button type="submit">更新</button>
-            </form>
-
-            <form action="/delete" method="post" style="display:inline;">
-                <input type="hidden" name="id" th:value="${job.id}">
-                <button type="submit" onclick="return confirm('消しますか？')">削除</button>
-            </form>
-        </li>
-    </ul>
 </body>
 
 </html>
