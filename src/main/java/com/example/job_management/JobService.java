@@ -56,7 +56,7 @@ public class JobService {
         job.setCompanyName(companyName);
         job.setStatus(JobStatus.valueOf(status));
         job.setDeadline(deadline);
-        job.setMemo(memo); // これを追加
+        job.setMemo(memo);
         jobRepository.save(job);
     }
 
@@ -64,7 +64,7 @@ public class JobService {
     public void updateJob(Long id, String status, String memo) {
         Job job = jobRepository.findById(id).orElseThrow();
         job.setStatus(JobStatus.valueOf(status));
-        job.setMemo(memo); // これを追加
+        job.setMemo(memo);
         jobRepository.save(job);
     }
 }
