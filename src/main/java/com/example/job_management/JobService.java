@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 
-// @Serviceをつけることで、Springに「これが作業員です」と認識させる
 @Service
 public class JobService {
 
@@ -21,14 +20,15 @@ public class JobService {
         }
     }
 
-    // データ追加の作業
     public void addJob(String companyName, String status, LocalDate deadline) {
         if (companyName == null || companyName.trim().isEmpty()) {
             return;
         }
         Job job = new Job();
         job.setCompanyName(companyName);
-        job.setStatus(status);
+
+        job.setStatus(JobStatus.valueOf(status));
+
         job.setDeadline(deadline);
         jobRepository.save(job);
     }
@@ -41,7 +41,9 @@ public class JobService {
     // 更新の作業
     public void updateJob(Long id, String status) {
         Job job = jobRepository.findById(id).orElseThrow();
-        job.setStatus(status);
+
+        job.setStatus(JobStatus.valueOf(status));
+
         jobRepository.save(job);
     }
 }

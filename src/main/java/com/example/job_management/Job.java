@@ -1,9 +1,6 @@
 package com.example.job_management;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*; // EntityやIdなどをまとめてインポート
 import java.time.LocalDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -14,11 +11,24 @@ public class Job {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String companyName; // 企業名（例：サイバーエージェント）
-    private String status; // 選考状況（例：夏インターン応募済み）
-    // 既存の private String status; の下あたりに追加
+    private String companyName;
+
+    // ここを修正：StringからJobStatus(Enum)に変更
+    // @Enumerated(EnumType.STRING) をつけることで、DBには文字列として保存される
+    @Enumerated(EnumType.STRING)
+    private JobStatus status;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate deadline;
+
+    // ゲッターとセッターも JobStatus型 に書き換える
+    public JobStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(JobStatus status) {
+        this.status = status;
+    }
 
     public LocalDate getDeadline() {
         return deadline;
@@ -28,7 +38,6 @@ public class Job {
         this.deadline = deadline;
     }
 
-    // ここから下は「ゲッターとセッター」（データを出し入れするための扉）
     public Long getId() {
         return id;
     }
@@ -43,13 +52,5 @@ public class Job {
 
     public void setCompanyName(String companyName) {
         this.companyName = companyName;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 }

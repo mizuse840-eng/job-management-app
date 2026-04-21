@@ -24,25 +24,25 @@
             <input type="text" name="companyName" class="form-control w-auto" placeholder="企業名" required>
             <select name="status" class="form-select w-auto" required>
                 <option value="" disabled selected>状況を選択</option>
-                <option value="応募準備中">応募準備中</option>
-                <option value="ES提出済み">ES提出済み</option>
-                <option value="面接待ち">面接待ち</option>
-                <option value="結果待ち">結果待ち</option>
-                <option value="お見送り">お見送り</option>
+                <option th:each="s : ${T(com.example.job_management.JobStatus).values()}"
+                        th:value="${s.name()}"
+                        th:text="${s.displayName}">
+                </option>
             </select>
             <button type="submit" class="btn btn-success">登録する</button>
         </form>
 
         <hr>
 
-        <ul class="list-group"> <li th:each="job : ${jobs}" class="list-group-item d-flex justify-content-between align-items-center">
+        <ul class="list-group"> 
+            <li th:each="job : ${jobs}" class="list-group-item d-flex justify-content-between align-items-center">
                 <div>
                     <span th:text="${job.deadline}"></span> -
                     <strong th:text="${job.companyName}"></strong>
                     
                     <span class="badge ms-2"
-                          th:text="${job.status}"
-                          th:classappend="${job.status == '面接待ち' ? 'text-bg-success' : (job.status == 'ES提出済み' ? 'text-bg-primary' : (job.status == 'お見送り' ? 'text-bg-dark' : 'text-bg-secondary'))}">
+                          th:text="${job.status.displayName}"
+                          th:classappend="${job.status != null and job.status.name() == 'INTERVIEW' ? 'text-bg-success' : (job.status != null and job.status.name() == 'APPLIED' ? 'text-bg-primary' : (job.status != null and job.status.name() == 'REJECTED' ? 'text-bg-dark' : 'text-bg-secondary'))}">
                     </span>
                 </div>
 
@@ -50,11 +50,11 @@
                     <form action="/update" method="post" style="display:inline;">
                         <input type="hidden" name="id" th:value="${job.id}">
                         <select name="status" class="form-select form-select-sm d-inline w-auto" required>
-                            <option value="応募準備中">応募準備中</option>
-                            <option value="ES提出済み">ES提出済み</option>
-                            <option value="面接待ち">面接待ち</option>
-                            <option value="結果待ち">結果待ち</option>
-                            <option value="お見送り">お見送り</option>
+                            <option th:each="s : ${T(com.example.job_management.JobStatus).values()}"
+                                    th:value="${s.name()}"
+                                    th:text="${s.displayName}"
+                                    th:selected="${s == job.status}">
+                            </option>
                         </select>
                         <button type="submit" class="btn btn-warning btn-sm">更新</button>
                     </form>
