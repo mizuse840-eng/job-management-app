@@ -1,6 +1,6 @@
 package com.example.job_management;
 
-import jakarta.persistence.*; // EntityやIdなどをまとめてインポート
+import jakarta.persistence.*;
 import java.time.LocalDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -13,15 +13,23 @@ public class Job {
 
     private String companyName;
 
-    // ここを修正：StringからJobStatus(Enum)に変更
-    // @Enumerated(EnumType.STRING) をつけることで、DBには文字列として保存される
     @Enumerated(EnumType.STRING)
     private JobStatus status;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate deadline;
 
-    // ゲッターとセッターも JobStatus型 に書き換える
+    @Column(columnDefinition = "TEXT")
+    private String memo;
+
+    public String getMemo() {
+        return memo;
+    }
+
+    public void setMemo(String memo) {
+        this.memo = memo;
+    }
+
     public JobStatus getStatus() {
         return status;
     }

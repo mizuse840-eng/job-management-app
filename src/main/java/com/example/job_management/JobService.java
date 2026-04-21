@@ -46,4 +46,25 @@ public class JobService {
 
         jobRepository.save(job);
     }
+
+    // データ追加の作業（引数とsetMemoを追加）
+    public void addJob(String companyName, String status, LocalDate deadline, String memo) {
+        if (companyName == null || companyName.trim().isEmpty()) {
+            return;
+        }
+        Job job = new Job();
+        job.setCompanyName(companyName);
+        job.setStatus(JobStatus.valueOf(status));
+        job.setDeadline(deadline);
+        job.setMemo(memo); // これを追加
+        jobRepository.save(job);
+    }
+
+    // 更新の作業（引数とsetMemoを追加）
+    public void updateJob(Long id, String status, String memo) {
+        Job job = jobRepository.findById(id).orElseThrow();
+        job.setStatus(JobStatus.valueOf(status));
+        job.setMemo(memo); // これを追加
+        jobRepository.save(job);
+    }
 }
