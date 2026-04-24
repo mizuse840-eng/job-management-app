@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
@@ -22,13 +22,15 @@
         <form action="/add" method="post" class="d-flex gap-2 mb-4 align-items-center">
             <input type="date" name="deadline" class="form-control w-auto" required>
             <input type="text" name="companyName" class="form-control w-auto" placeholder="企業名" required>
+            
             <select name="status" class="form-select w-auto" required>
                 <option value="" disabled selected>状況を選択</option>
-                <option th:each="s : ${T(com.example.job_management.JobStatus).values()}"
-                        th:value="${s.name()}"
-                        th:text="${s.displayName}">
+                <option th:each="s : ${statuses}"
+                        th:value="${s.code}"
+                        th:text="${s.name}">
                 </option>
             </select>
+            
             <input type="text" name="memo" class="form-control w-auto" placeholder="メモ（面接内容など）">
             <button type="submit" class="btn btn-success">登録する</button>
         </form>
@@ -42,8 +44,9 @@
                     <strong th:text="${job.companyName}"></strong>
                     
                     <span class="badge ms-2"
-                          th:text="${job.status.displayName}"
-                          th:classappend="${job.status != null and job.status.name() == 'INTERVIEW' ? 'text-bg-success' : (job.status != null and job.status.name() == 'APPLIED' ? 'text-bg-primary' : (job.status != null and job.status.name() == 'REJECTED' ? 'text-bg-dark' : 'text-bg-secondary'))}">
+                          th:if="${job.status != null}"
+                          th:text="${job.status.name}"
+                          th:classappend="${statusClassMap[job.status.code]}">
                     </span>
                     
                     <div th:if="${job.memo != null and !job.memo.isEmpty()}" class="mt-1 text-muted small">
@@ -54,13 +57,15 @@
                 <div class="d-flex gap-2 align-items-center">
                     <form action="/update" method="post" class="d-flex gap-2 align-items-center" style="display:inline;">
                         <input type="hidden" name="id" th:value="${job.id}">
+                        
                         <select name="status" class="form-select form-select-sm d-inline w-auto" required>
-                            <option th:each="s : ${T(com.example.job_management.JobStatus).values()}"
-                                    th:value="${s.name()}"
-                                    th:text="${s.displayName}"
-                                    th:selected="${s == job.status}">
+                            <option th:each="s : ${statuses}"
+                                    th:value="${s.code}"
+                                    th:text="${s.name}"
+                                    th:selected="${job.status != null and s.code == job.status.code}">
                             </option>
                         </select>
+                        
                         <input type="text" name="memo" class="form-control form-control-sm d-inline w-auto" placeholder="メモ" th:value="${job.memo}">
                         <button type="submit" class="btn btn-warning btn-sm">更新</button>
                     </form>
