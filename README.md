@@ -3,9 +3,10 @@
 自身の就職活動やインターンシップの選考状況を一元管理し、可視化するためのWebアプリケーションです。
 
 ## 🚀 デプロイ環境について
+[アプリを開く（Render）]https://job-management-app-womb.onrender.com
 現在はインフラ環境の移行（または無料枠の終了）に伴い、一時的に公開を停止しています。
 動作の様子は以下のデモ動画をご覧ください。
-[アプリを開く（Render）]https://job-management-app-womb.onrender.com
+
 
 <img src="demo.gif" width="600">
 

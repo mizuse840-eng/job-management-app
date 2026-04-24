@@ -3,8 +3,12 @@ package com.example.job_management;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import org.springframework.format.annotation.DateTimeFormat;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
 public class Job {
 
     @Id
@@ -13,8 +17,10 @@ public class Job {
 
     private String companyName;
 
-    @Enumerated(EnumType.STRING)
-    private JobStatus status;
+    // ★ココが変更点！古い @Enumerated を消して、新しい Status テーブルと連携させたぞ！
+    @ManyToOne
+    @JoinColumn(name = "status_code", referencedColumnName = "code")
+    private Status status;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate deadline;
@@ -22,43 +28,4 @@ public class Job {
     @Column(columnDefinition = "TEXT")
     private String memo;
 
-    public String getMemo() {
-        return memo;
-    }
-
-    public void setMemo(String memo) {
-        this.memo = memo;
-    }
-
-    public JobStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(JobStatus status) {
-        this.status = status;
-    }
-
-    public LocalDate getDeadline() {
-        return deadline;
-    }
-
-    public void setDeadline(LocalDate deadline) {
-        this.deadline = deadline;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
-    }
 }

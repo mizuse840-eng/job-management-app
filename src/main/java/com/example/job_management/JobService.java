@@ -11,6 +11,9 @@ public class JobService {
     @Autowired
     private JobRepository jobRepository;
 
+    @Autowired
+    private StatusRepository statusRepository;
+
     // 検索と一覧取得の作業
     public List<Job> getJobs(String keyword) {
         if (keyword != null && !keyword.isEmpty()) {
@@ -20,14 +23,15 @@ public class JobService {
         }
     }
 
-    public void addJob(String companyName, String status, LocalDate deadline) {
+    public void addJob(String companyName, String statusCode, LocalDate deadline) {
         if (companyName == null || companyName.trim().isEmpty()) {
             return;
         }
         Job job = new Job();
         job.setCompanyName(companyName);
 
-        job.setStatus(JobStatus.valueOf(status));
+        Status status = statusRepository.findById(statusCode).orElse(null);
+        job.setStatus(status);
 
         job.setDeadline(deadline);
         jobRepository.save(job);
@@ -39,31 +43,37 @@ public class JobService {
     }
 
     // 更新の作業
-    public void updateJob(Long id, String status) {
+    public void updateJob(Long id, String statusCode) {
         Job job = jobRepository.findById(id).orElseThrow();
 
-        job.setStatus(JobStatus.valueOf(status));
+        Status status = statusRepository.findById(statusCode).orElse(null);
+        job.setStatus(status);
 
         jobRepository.save(job);
     }
 
-    // データ追加の作業（引数とsetMemoを追加）
-    public void addJob(String companyName, String status, LocalDate deadline, String memo) {
+    // データ追加の作業
+    public void addJob(String companyName, String statusCode, LocalDate deadline, String memo) {
         if (companyName == null || companyName.trim().isEmpty()) {
             return;
         }
         Job job = new Job();
         job.setCompanyName(companyName);
-        job.setStatus(JobStatus.valueOf(status));
+
+        Status status = statusRepository.findById(statusCode).orElse(null);
+        job.setStatus(status);
+
         job.setDeadline(deadline);
         job.setMemo(memo);
         jobRepository.save(job);
     }
 
-    // 更新の作業（引数とsetMemoを追加）
-    public void updateJob(Long id, String status, String memo) {
+    public void updateJob(Long id, String statusCode, String memo) {
         Job job = jobRepository.findById(id).orElseThrow();
-        job.setStatus(JobStatus.valueOf(status));
+
+        Status status = statusRepository.findById(statusCode).orElse(null);
+        job.setStatus(status);
+
         job.setMemo(memo);
         jobRepository.save(job);
     }
