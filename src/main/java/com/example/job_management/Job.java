@@ -17,7 +17,6 @@ public class Job {
 
     private String companyName;
 
-    // ★ココが変更点！古い @Enumerated を消して、新しい Status テーブルと連携させたぞ！
     @ManyToOne
     @JoinColumn(name = "status_code", referencedColumnName = "code")
     private Status status;
