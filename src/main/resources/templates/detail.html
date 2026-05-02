@@ -33,7 +33,7 @@
                 </p>
                 <p class="mb-0">
                     <strong>メモ：</strong>
-                    <span th:text="${company.memo != null ? company.memo : '-'}"></span>
+                    <span th:text="${company.memo != null and !company.memo.isEmpty() ? company.memo : '-'}"></span>
                 </p>
             </div>
         </div>

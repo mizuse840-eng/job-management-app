@@ -16,6 +16,15 @@ form {
     margin-bottom: 20px;
 }
 
+/* リスト内の削除フォームにはカードスタイルを適用しない */
+.list-group-item form {
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
+    margin-bottom: 0;
+}
+
 input {
     padding: 8px;
     margin-right: 10px;
