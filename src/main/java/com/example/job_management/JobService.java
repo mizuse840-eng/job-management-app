@@ -14,6 +14,10 @@ public class JobService {
     @Autowired
     private StatusRepository statusRepository;
 
+    public List<Status> getStatuses() {
+        return statusRepository.findAllByOrderBySortOrderAsc();
+    }
+
     // 検索と一覧取得の作業
     public List<Job> getJobs(String keyword) {
         if (keyword != null && !keyword.isEmpty()) {

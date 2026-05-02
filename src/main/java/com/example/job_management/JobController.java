@@ -18,15 +18,12 @@ public class JobController {
     @Autowired
     private JobService jobService;
 
-    @Autowired
-    private StatusRepository statusRepository;
-
     @GetMapping("/")
     public String index(@RequestParam(required = false) String keyword, Model model) {
         List<Job> jobs = jobService.getJobs(keyword);
         model.addAttribute("jobs", jobs);
 
-        List<Status> statuses = statusRepository.findAll();
+        List<Status> statuses = jobService.getStatuses();
         model.addAttribute("statuses", statuses);
 
         Map<String, String> statusClassMap = Map.of(
