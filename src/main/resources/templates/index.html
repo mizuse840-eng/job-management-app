@@ -1,78 +1,87 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
-    <title>就活管理ダッシュボード</title>
+    <title>就活・インターン管理ダッシュボード</title>
     <link rel="stylesheet" th:href="@{/style.css}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body>
-    <div class="container mt-4"> <h1>インターン応募管理</h1>
+    <div class="container mt-4">
+        <h1>就活・インターン管理</h1>
 
-        <div class="search-container mb-4">
+        <!-- 検索 + ステータスサマリー -->
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
             <form action="/" method="get" class="d-flex gap-2 align-items-center">
                 <input type="text" name="keyword" class="form-control w-auto" placeholder="企業名で検索...">
                 <button type="submit" class="btn btn-primary">検索</button>
                 <a href="/" class="btn btn-outline-secondary">リセット</a>
             </form>
+            <div class="d-flex gap-2 flex-wrap">
+                <span th:each="s : ${selectionStatuses}"
+                      class="badge rounded-pill fs-6 fw-normal"
+                      th:classappend="${(statusSummary[s.categoryName] ?: 0) > 0 ? ' text-bg-primary' : ' text-bg-light text-muted border'}"
+                      th:text="${s.categoryName + ' ' + (statusSummary[s.categoryName] ?: 0)}">
+                </span>
+            </div>
         </div>
 
-        <form action="/add" method="post" class="d-flex gap-2 mb-4 align-items-center">
-            <input type="date" name="deadline" class="form-control w-auto" required>
-            <input type="text" name="companyName" class="form-control w-auto" placeholder="企業名" required>
-            
-            <select name="status" class="form-select w-auto" required>
-                <option value="" disabled selected>状況を選択</option>
-                <option th:each="s : ${statuses}"
-                        th:value="${s.code}"
-                        th:text="${s.name}">
+        <!-- 企業登録フォーム -->
+        <form action="/company/add" method="post" class="d-flex gap-2 mb-4 align-items-center flex-wrap">
+            <input type="date" name="eventDate" class="form-control w-auto">
+            <input type="text" name="name" class="form-control w-auto" placeholder="企業名" required>
+            <select name="statusCategoryId" class="form-select w-auto">
+                <option value="">状況を選択</option>
+                <option th:each="s : ${selectionStatuses}"
+                        th:value="${s.id}"
+                        th:text="${s.categoryName}">
                 </option>
             </select>
-            
+            <input type="text" name="jobType" class="form-control w-auto" placeholder="職種（任意）">
             <input type="text" name="memo" class="form-control w-auto" placeholder="メモ（面接内容など）">
             <button type="submit" class="btn btn-success">登録する</button>
         </form>
 
         <hr>
 
-        <ul class="list-group"> 
-            <li th:each="job : ${jobs}" class="list-group-item d-flex justify-content-between align-items-center">
+        <!-- 企業一覧 -->
+        <ul class="list-group">
+            <li th:each="company : ${companies}"
+                class="list-group-item d-flex justify-content-between align-items-center py-3">
                 <div>
-                    <span th:text="${job.deadline}"></span> -
-                    <strong th:text="${job.companyName}"></strong>
-                    
-                    <span class="badge ms-2"
-                          th:if="${job.status != null}"
-                          th:text="${job.status.name}"
-                          th:classappend="${statusClassMap[job.status.code]}">
-                    </span>
-                    
-                    <div th:if="${job.memo != null and !job.memo.isEmpty()}" class="mt-1 text-muted small">
-                        <span th:text="${job.memo}"></span>
+                    <!-- メイン情報（目立たせる） -->
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                        <span class="text-muted small"
+                              th:text="${!#lists.isEmpty(company.selectionHistories) ? company.selectionHistories[0].eventDate : '-'}">
+                        </span>
+                        <strong class="fs-5" th:text="${company.name}"></strong>
+                        <span class="badge text-bg-primary"
+                              th:if="${!#lists.isEmpty(company.selectionHistories)}"
+                              th:text="${company.selectionHistories[0].status.categoryName}">
+                        </span>
+                        <span class="badge text-bg-secondary"
+                              th:if="${#lists.isEmpty(company.selectionHistories)}">未登録</span>
+                    </div>
+                    <!-- サブ情報（少し見やすく） -->
+                    <div class="d-flex gap-3 small text-secondary">
+                        <span th:if="${company.jobType != null and !company.jobType.isEmpty()}"
+                              th:text="'職種：' + ${company.jobType}"></span>
+                        <span th:if="${company.industry != null and !company.industry.isEmpty()}"
+                              th:text="'業界：' + ${company.industry}"></span>
+                        <span th:if="${company.memo != null and !company.memo.isEmpty()}"
+                              th:text="${company.memo}"></span>
                     </div>
                 </div>
 
                 <div class="d-flex gap-2 align-items-center">
-                    <form action="/update" method="post" class="d-flex gap-2 align-items-center" style="display:inline;">
-                        <input type="hidden" name="id" th:value="${job.id}">
-                        
-                        <select name="status" class="form-select form-select-sm d-inline w-auto" required>
-                            <option th:each="s : ${statuses}"
-                                    th:value="${s.code}"
-                                    th:text="${s.name}"
-                                    th:selected="${job.status != null and s.code == job.status.code}">
-                            </option>
-                        </select>
-                        
-                        <input type="text" name="memo" class="form-control form-control-sm d-inline w-auto" placeholder="メモ" th:value="${job.memo}">
-                        <button type="submit" class="btn btn-warning btn-sm">更新</button>
-                    </form>
-
-                    <form action="/delete" method="post" style="display:inline;">
-                        <input type="hidden" name="id" th:value="${job.id}">
-                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('消しますか？')">削除</button>
+                    <a th:href="@{/company/{id}(id=${company.id})}"
+                       class="btn btn-warning btn-sm">詳細・更新</a>
+                    <form action="/company/delete" method="post">
+                        <input type="hidden" name="id" th:value="${company.id}">
+                        <button type="submit" class="btn btn-danger btn-sm"
+                                onclick="return confirm('削除しますか？')">削除</button>
                     </form>
                 </div>
             </li>
