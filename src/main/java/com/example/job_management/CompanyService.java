@@ -34,7 +34,7 @@ public class CompanyService {
     public void addCompany(String name, String industry, String url, String jobType, String memo,
                            Long statusCategoryId, LocalDate eventDate) {
         if (name == null || name.trim().isEmpty()) {
-            return;
+            throw new IllegalArgumentException("企業名は必須です");
         }
         Company company = new Company();
         company.setName(name);
@@ -50,6 +50,9 @@ public class CompanyService {
     }
 
     public void updateCompany(Long id, String name, String industry, String url, String jobType, String memo) {
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("企業名は必須です");
+        }
         Company company = companyRepository.findById(id).orElseThrow();
         company.setName(name);
         company.setIndustry(industry);
@@ -68,6 +71,12 @@ public class CompanyService {
     }
 
     public void addSelectionHistory(Long companyId, Long statusCategoryId, LocalDate eventDate, String detailMemo) {
+        if (statusCategoryId == null) {
+            throw new IllegalArgumentException("ステータスを選択してください");
+        }
+        if (eventDate == null) {
+            throw new IllegalArgumentException("日付は必須です");
+        }
         Company company = companyRepository.findById(companyId).orElseThrow();
         Category status = categoryRepository.findById(statusCategoryId).orElseThrow();
 

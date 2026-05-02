@@ -38,6 +38,9 @@
             </div>
         </div>
 
+        <!-- エラーメッセージ -->
+        <div th:if="${errorMessage}" class="alert alert-danger py-2" th:text="${errorMessage}"></div>
+
         <!-- 履歴追加フォーム -->
         <h4>選考履歴を追加</h4>
         <form action="/history/add" method="post" class="d-flex gap-2 mb-4 align-items-center flex-wrap">

@@ -28,6 +28,9 @@
             </div>
         </div>
 
+        <!-- エラーメッセージ -->
+        <div th:if="${errorMessage}" class="alert alert-danger py-2" th:text="${errorMessage}"></div>
+
         <!-- 企業登録フォーム -->
         <form action="/company/add" method="post" class="d-flex gap-2 mb-4 align-items-center flex-wrap">
             <input type="date" name="eventDate" class="form-control w-auto">

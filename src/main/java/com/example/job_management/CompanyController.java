@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class CompanyController {
@@ -58,9 +59,15 @@ public class CompanyController {
             @RequestParam(required = false) String industry,
             @RequestParam(required = false) String url,
             @RequestParam(required = false) String jobType,
-            @RequestParam(required = false) String memo) {
+            @RequestParam(required = false) String memo,
+            RedirectAttributes redirectAttributes) {
 
-        companyService.updateCompany(id, name, industry, url, jobType, memo);
+        try {
+            companyService.updateCompany(id, name, industry, url, jobType, memo);
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/company/" + id + "/edit";
+        }
         return "redirect:/company/" + id;
     }
 
@@ -72,9 +79,15 @@ public class CompanyController {
             @RequestParam(required = false) String jobType,
             @RequestParam(required = false) String memo,
             @RequestParam(required = false) Long statusCategoryId,
-            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate eventDate) {
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate eventDate,
+            RedirectAttributes redirectAttributes) {
 
-        companyService.addCompany(name, industry, url, jobType, memo, statusCategoryId, eventDate);
+        try {
+            companyService.addCompany(name, industry, url, jobType, memo, statusCategoryId, eventDate);
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/";
+        }
         return "redirect:/";
     }
 
@@ -87,11 +100,16 @@ public class CompanyController {
     @PostMapping("/history/add")
     public String addHistory(
             @RequestParam Long companyId,
-            @RequestParam Long statusCategoryId,
-            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate eventDate,
-            @RequestParam(required = false) String detailMemo) {
+            @RequestParam(required = false) Long statusCategoryId,
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate eventDate,
+            @RequestParam(required = false) String detailMemo,
+            RedirectAttributes redirectAttributes) {
 
-        companyService.addSelectionHistory(companyId, statusCategoryId, eventDate, detailMemo);
+        try {
+            companyService.addSelectionHistory(companyId, statusCategoryId, eventDate, detailMemo);
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
         return "redirect:/company/" + companyId;
     }
 

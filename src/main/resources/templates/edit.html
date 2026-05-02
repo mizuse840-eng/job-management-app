@@ -15,6 +15,8 @@
 
         <h2 th:text="'企業情報を編集：' + ${company.name}"></h2>
 
+        <div th:if="${errorMessage}" class="alert alert-danger py-2" th:text="${errorMessage}"></div>
+
         <form th:action="@{/company/{id}/edit(id=${company.id})}" method="post" class="mt-4">
             <div class="mb-3">
                 <label class="form-label fw-bold">企業名 <span class="text-danger">*</span></label>
