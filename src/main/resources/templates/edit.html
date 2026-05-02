@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${company.name} + ' - 編集'">企業編集</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container mt-4">
+
+        <a th:href="@{/company/{id}(id=${company.id})}" class="btn btn-outline-secondary mb-3">← 詳細に戻る</a>
+
+        <h2 th:text="'企業情報を編集：' + ${company.name}"></h2>
+
+        <form th:action="@{/company/{id}/edit(id=${company.id})}" method="post" class="mt-4">
+            <div class="mb-3">
+                <label class="form-label fw-bold">企業名 <span class="text-danger">*</span></label>
+                <input type="text" name="name" class="form-control"
+                       th:value="${company.name}" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">業界</label>
+                <input type="text" name="industry" class="form-control"
+                       th:value="${company.industry}">
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">職種</label>
+                <input type="text" name="jobType" class="form-control"
+                       th:value="${company.jobType}">
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">採用ページURL</label>
+                <input type="url" name="url" class="form-control"
+                       th:value="${company.url}">
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">メモ</label>
+                <textarea name="memo" class="form-control" rows="3"
+                          th:text="${company.memo}"></textarea>
+            </div>
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">保存する</button>
+                <a th:href="@{/company/{id}(id=${company.id})}"
+                   class="btn btn-outline-secondary">キャンセル</a>
+            </div>
+        </form>
+
+    </div>
+</body>
+
+</html>

@@ -45,6 +45,25 @@ public class CompanyController {
         return "detail";
     }
 
+    @GetMapping("/company/{id}/edit")
+    public String editForm(@PathVariable Long id, Model model) {
+        model.addAttribute("company", companyService.getCompanyById(id));
+        return "edit";
+    }
+
+    @PostMapping("/company/{id}/edit")
+    public String updateCompany(
+            @PathVariable Long id,
+            @RequestParam String name,
+            @RequestParam(required = false) String industry,
+            @RequestParam(required = false) String url,
+            @RequestParam(required = false) String jobType,
+            @RequestParam(required = false) String memo) {
+
+        companyService.updateCompany(id, name, industry, url, jobType, memo);
+        return "redirect:/company/" + id;
+    }
+
     @PostMapping("/company/add")
     public String addCompany(
             @RequestParam String name,

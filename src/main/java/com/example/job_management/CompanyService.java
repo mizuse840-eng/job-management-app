@@ -49,6 +49,16 @@ public class CompanyService {
         }
     }
 
+    public void updateCompany(Long id, String name, String industry, String url, String jobType, String memo) {
+        Company company = companyRepository.findById(id).orElseThrow();
+        company.setName(name);
+        company.setIndustry(industry);
+        company.setUrl(url);
+        company.setJobType(jobType);
+        company.setMemo(memo);
+        companyRepository.save(company);
+    }
+
     public void deleteCompany(Long id) {
         companyRepository.deleteById(id);
     }
